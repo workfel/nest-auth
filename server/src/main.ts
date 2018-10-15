@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { WsAdapter } from '@nestjs/websockets';
 import * as socketio from 'socket.io';
+import * as expressSession from 'express-session';
 import * as passport from 'passport';
 
 async function bootstrap() {
@@ -16,6 +17,11 @@ async function bootstrap() {
 
   app.use(passport.initialize());
   app.use(passport.session());
+  app.use(expressSession({
+    secret: 'TWC_2018',
+    resave: true,
+    saveUninitialized: true,
+  }));
 
   await app.listen(8080);
 

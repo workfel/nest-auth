@@ -22,6 +22,7 @@
     "@nestjs/microservices": "^5.3.11",
     "@nestjs/testing": "^5.0.0-beta.6",
     "@nestjs/websockets": "^5.0.0-beta.6",
+    "express-session": "^1.15.6",
     "fastify-formbody": "^2.0.0",
     "passport": "^0.4.0",
     "passport-google-oauth": "^1.0.0",

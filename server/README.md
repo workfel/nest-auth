@@ -1,14 +1,15 @@
 # nest-auth
 
-## Description
-
-description
-
 ## Installation
 
 ```bash
 $ npm install
 ```
+
+
+## Before running
+Update the `config.ts` file add your `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`
+
 
 ## Running the app
 

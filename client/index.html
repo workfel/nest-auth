@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Nest authentication By Digikare</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.slim.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <div class="container" id="app">
+
+        <h1 class="title">Google sign-in with NestJS auth | © Digikare </h1>
+        <div class="columns">
+            <div class="column is-four-fifths">
+                <a class="button" v-on:click="googleSignIn()">
+                    <i class="fab fa-google"></i>&nbsp;Sign in
+                </a>
+            </div>
+        </div>
+        <div v-if="userFound" class="card">
+            <div class="card-content">
+                <div class="media">
+                    <div class="media-left">
+                        <figure class="image is-48x48">
+                            <img v-bind:src="userFound.photo">
+                        </figure>
+                    </div>
+                    <div class="media-content">
+                        <p class="title is-4">{{userFound.name}}</p>
+                    </div>
+                    <a class="delete" v-on:click="signOut()"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        var app2 = new Vue({
+            el: '#app',
+            data: {
+                userFound: false,
+                socket: null,
+                popup: null
+            },
+            created: function() {
+                this.socket = io('http://127.0.0.1:8080');
+
+                this.socket.on('google', user => {
+                    console.log(user);
+                    this.userFound = user;
+
+                    this.popup.close();
+                })
+            },
+            methods: {
+                googleSignIn: function() {
+
+                    this.popup = this.openPopup();
+                    this.checkPopup();
+                },
+                signOut: function() {
+                    this.userFound = null;
+                },
+
+                openPopup: function() {
+                    const url = `http://127.0.0.1:8080/auth/google?socketId=${this.socket.id}`;
+
+                    const width = 600;
+                    const height = 600;
+                    const left = (window.innerWidth / 2) - (width / 2);
+                    const top = (window.innerHeight / 2) - (height / 2);
+
+                    return window.open(url, '',
+                        `toolbar=no, location=no, directories=no, status=no, menubar=no, 
+scrollbars=no, resizable=no, copyhistory=no, width=${width}, 
+height=${height}, top=${top}, left=${left}`
+                    );
+                },
+                checkPopup: function() {
+                    const check = setInterval(() => {
+                        if (!this.popup || this.popup.closed || this.popup.closed === undefined) {
+                            clearInterval(check);
+                        }
+                    }, 1000)
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
